@@ -8,7 +8,13 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_executable(hupeyaszih-polarization-simulation
     src/main.c
+    src/logger.c
+    src/config.c
+    src/argument_parser.c
+    src/hstring.c
 )
+
+target_link_libraries(hupeyaszih-polarization-simulation PRIVATE m)
 
 target_include_directories(hupeyaszih-polarization-simulation
     PRIVATE
