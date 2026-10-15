@@ -14,3 +14,5 @@ The following literature includes research and foundaitonal studies reviewed to 
 >
 > Deffuant, G., Neau, D., Amblard, F., & Weisbuch, G. (2000). Mixing beliefs among interacting agents. Advances in complex systems, 3(01n04), 87-98.
 >
+> Proskurnikov, A. V., Matveev, A. S., & Cao, M. (2015). Opinion dynamics in social networks with hostile camps: Consensus vs. polarization. IEEE Transactions on Automatic Control, 61(6), 1524-1536.
+> 
