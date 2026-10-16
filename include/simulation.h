@@ -12,11 +12,12 @@ struct edge {
 
 struct node {
     uint32_t id;
-
     uint32_t belief;
-    uint32_t persuasiveness;
-    uint32_t stubbornness;
-    uint32_t openness;
+
+    uint8_t persuasiveness;
+    uint8_t stubbornness;
+    uint8_t openness;
+    uint8_t dynamic_reputation;
 
     uint16_t edge_count;
     uint16_t edge_capacity;

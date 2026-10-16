@@ -17,6 +17,7 @@ void init_simulation(struct simulation *simulation, struct config *config) {
         node->persuasiveness = simulation_get_random_number(config->min_persuasiveness, config->max_persuasiveness);
         node->stubbornness = simulation_get_random_number(config->min_stubbornness, config->max_stubbornness);
         node->openness = simulation_get_random_number(config->min_openness, config->max_openness);
+        node->dynamic_reputation = 0;
 
         uint32_t degree = simulation_get_random_number(config->initial_min_degree, config->initial_max_degree);
         node->edge_count = degree;
