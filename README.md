@@ -16,3 +16,5 @@ The following literature includes research and foundaitonal studies reviewed to 
 >
 > Proskurnikov, A. V., Matveev, A. S., & Cao, M. (2015). Opinion dynamics in social networks with hostile camps: Consensus vs. polarization. IEEE Transactions on Automatic Control, 61(6), 1524-1536.
 > 
+> Weinans, E., Steinmann, P., Perrone, E., Marandi, A., & van Voorn, G. A. (2024). An exploration of drivers of opinion dynamics.
+>
