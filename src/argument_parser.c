@@ -2,18 +2,22 @@
 #include "hstring.h"
 #include <string.h>
 
-#define TOTAL_SETTING_COUNT 8
+#define TOTAL_SETTING_COUNT 11
 #define SETTING_STR_LEN 24
 
 const char settings[TOTAL_SETTING_COUNT][SETTING_STR_LEN] = {
     "-N",
-    "-initial_average_degree",
+    "-initial_min_degree",
+    "-initial_max_degree",
 
     "-min_stubbornness",
     "-max_stubbornness",
 
     "-min_persuasiveness",
     "-max_persuasiveness",
+
+    "-min_openness",
+    "-max_openness",
 
     "-rewire_threshold",
     "-seed"
@@ -46,30 +50,42 @@ void argument_parser_parse_config(struct config *const config, int argc, char *a
                 config->N = N;
                 break;
             }case 1: {
-                uint32_t initial_avg_degree = hstring_str_to_uint32(value);
-                config->initial_average_degree = initial_avg_degree;
+                uint32_t initial_min_degree = hstring_str_to_uint32(value);
+                config->initial_min_degree = initial_min_degree;
                 break;
             }case 2: {
+                uint32_t initial_max_degree = hstring_str_to_uint32(value);
+                config->initial_max_degree = initial_max_degree;
+                break;
+            }case 3: {
                 uint32_t min_stubbornness = hstring_str_to_uint32(value);
                 config->min_stubbornness = min_stubbornness;
                 break;
-            }case 3: {
+            }case 4: {
                 uint32_t max_stubbornness = hstring_str_to_uint32(value);
                 config->max_stubbornness = max_stubbornness;
                 break;
-            }case 4: {
+            }case 5: {
                 uint32_t min_persuasiveness = hstring_str_to_uint32(value);
                 config->min_persuasiveness = min_persuasiveness;
                 break;
-            }case 5: {
+            }case 6: {
                 uint32_t max_persuasiveness = hstring_str_to_uint32(value);
                 config->max_persuasiveness = max_persuasiveness;
                 break;
-            }case 6: {
+            }case 7: {
+                uint32_t min_openness = hstring_str_to_uint32(value);
+                config->min_openness = min_openness;
+                break;
+            }case 8: {
+                uint32_t max_openness = hstring_str_to_uint32(value);
+                config->max_openness = max_openness;
+                break;
+            }case 9: {
                 uint32_t rewire_threshold = hstring_str_to_uint32(value);
                 config->rewire_threshold = rewire_threshold;
                 break;
-            }case 7: {
+            }case 10: {
                 uint32_t seed = hstring_str_to_uint32(value);
                 config->seed = seed;
                 break;

@@ -12,6 +12,7 @@ add_executable(hupeyaszih-polarization-simulation
     src/config.c
     src/argument_parser.c
     src/hstring.c
+    src/simulation.c
 )
 
 target_link_libraries(hupeyaszih-polarization-simulation PRIVATE m)
