@@ -17,7 +17,7 @@ void init_simulation(struct simulation *simulation, struct config *config) {
 
     for(uint32_t i = 0; i < config->N; ++i) {
         struct node *node = simulation->nodes + i;
-        node->belief = simulation_get_random_number(0, globals_convert_float_to_uint32(1.0f));
+        node->belief = globals_convert_float_to_uint32(simulation_get_random_float_between_0_1());
         node->persuasiveness = simulation_get_random_number(config->min_persuasiveness, config->max_persuasiveness);
         node->stubbornness = simulation_get_random_number(config->min_stubbornness, config->max_stubbornness);
         node->openness = simulation_get_random_number(config->min_openness, config->max_openness);

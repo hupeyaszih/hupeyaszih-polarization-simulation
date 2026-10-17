@@ -1,3 +1,6 @@
 build/
 .cache/
+.venv/
+simulation_logs/
+
 compile_commands.json

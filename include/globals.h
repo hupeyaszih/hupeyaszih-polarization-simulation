@@ -9,7 +9,7 @@ static inline uint32_t globals_convert_float_to_uint32(float x) {
     return (uint32_t)(x * 4294967295.0f);
 }
 
-static inline float globals_convert_uint32_to_float(float x) {
+static inline float globals_convert_uint32_to_float(uint32_t x) {
     return (float)(x / 4294967295.0f);
 }
 

@@ -39,6 +39,10 @@ static inline uint32_t simulation_get_random_number(uint32_t min, uint32_t max) 
     return rand() % (max - min) + min;
 }
 
+static inline float simulation_get_random_float_between_0_1() {
+    return (float) rand() / (float) RAND_MAX;
+}
+
 void simulation_node_add_edge(struct node *source_node, struct node *destination_node);
 void simulation_node_remove_edge(struct node *source_node, uint32_t edge_id);
 

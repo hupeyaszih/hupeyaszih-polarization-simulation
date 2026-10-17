@@ -21,6 +21,8 @@ struct config {
     uint32_t seed;
 
     uint64_t final_step;
+
+    char *log_dir;
 };
 
 struct config config_init_default_config();

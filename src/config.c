@@ -19,6 +19,7 @@ struct config config_init_default_config() {
         .rewire_threshold = globals_convert_float_to_uint32(0.2f),
         .seed = 13,
 
-        .final_step = 1000
+        .final_step = 1000,
+        .log_dir = "./"
     };
 }
