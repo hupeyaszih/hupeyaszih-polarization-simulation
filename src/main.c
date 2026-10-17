@@ -14,7 +14,9 @@ int main(int argc, char *argv[]) {
     struct simulation simulation;
     init_simulation(&simulation, &config);
 
-    delete_simulation(&simulation);
+    logger_save_edges(&simulation);
+    logger_save_nodes(&simulation);
 
+    delete_simulation(&simulation);
     return 0;
 }

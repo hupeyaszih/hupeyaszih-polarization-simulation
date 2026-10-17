@@ -1,19 +1,22 @@
 #include "simulation.h"
 #include "globals.h"
-#include <stdio.h>
 #include <stdlib.h>
 
 void init_simulation(struct simulation *simulation, struct config *config) {
     simulation->config = *config;
-    simulation->time = 0;
+    simulation->step = 0;
 
     srand(config->seed);
 
     simulation->nodes = calloc(config->N, sizeof(struct node));
+
     for(uint32_t i = 0; i < config->N; ++i) {
         struct node *node = simulation->nodes + i;
         node->id = i;
+    }
 
+    for(uint32_t i = 0; i < config->N; ++i) {
+        struct node *node = simulation->nodes + i;
         node->belief = simulation_get_random_number(0, globals_convert_float_to_uint32(1.0f));
         node->persuasiveness = simulation_get_random_number(config->min_persuasiveness, config->max_persuasiveness);
         node->stubbornness = simulation_get_random_number(config->min_stubbornness, config->max_stubbornness);
@@ -21,12 +24,16 @@ void init_simulation(struct simulation *simulation, struct config *config) {
         node->dynamic_reputation = 0;
 
         uint32_t degree = simulation_get_random_number(config->initial_min_degree, config->initial_max_degree);
-        node->edge_count = degree;
-        node->edge_capacity = node->edge_count;
+        node->edge_capacity = degree * 2;
         node->edges = calloc(node->edge_capacity, sizeof(struct edge));
 
         for(uint32_t k = 0; k < degree; ++k) {
-            struct node *dest = simulation->nodes + simulation_get_random_number(0, simulation->config.N);
+            uint32_t target_index = simulation_get_random_number(0, simulation->config.N - 1);
+
+            if(target_index >= node->id) {
+                ++target_index;
+            }
+            struct node *dest = simulation->nodes + target_index;
             simulation_node_add_edge(node, dest);
         }
     }
