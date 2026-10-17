@@ -2,7 +2,7 @@
 #include "hstring.h"
 #include <string.h>
 
-#define TOTAL_SETTING_COUNT 11
+#define TOTAL_SETTING_COUNT 12
 #define SETTING_STR_LEN 24
 
 const char settings[TOTAL_SETTING_COUNT][SETTING_STR_LEN] = {
@@ -20,7 +20,9 @@ const char settings[TOTAL_SETTING_COUNT][SETTING_STR_LEN] = {
     "-max_openness",
 
     "-rewire_threshold",
-    "-seed"
+    "-seed",
+
+    "-final_step"
 };
 
 uint32_t get_setting_id(char *str) {
@@ -88,6 +90,10 @@ void argument_parser_parse_config(struct config *const config, int argc, char *a
             }case 10: {
                 uint32_t seed = hstring_str_to_uint32(value);
                 config->seed = seed;
+                break;
+            }case 11: {
+                uint32_t final_step = hstring_str_to_uint32(value);
+                config->final_step = final_step;
                 break;
             }
         }

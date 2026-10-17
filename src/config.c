@@ -17,6 +17,8 @@ struct config config_init_default_config() {
         .max_openness = 140,
 
         .rewire_threshold = globals_convert_float_to_uint32(0.2f),
-        .seed = 13
+        .seed = 13,
+
+        .final_step = 1000
     };
 }

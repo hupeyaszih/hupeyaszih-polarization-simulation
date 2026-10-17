@@ -19,6 +19,8 @@ struct config {
 
     uint32_t rewire_threshold;
     uint32_t seed;
+
+    uint64_t final_step;
 };
 
 struct config config_init_default_config();

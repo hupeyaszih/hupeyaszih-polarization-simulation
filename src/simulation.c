@@ -5,6 +5,7 @@
 
 void init_simulation(struct simulation *simulation, struct config *config) {
     simulation->config = *config;
+    simulation->time = 0;
 
     srand(config->seed);
 

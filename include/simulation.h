@@ -27,6 +27,7 @@ struct node {
 struct simulation {
     struct node *nodes;
     struct config config;
+    uint64_t time;
 };
 
 void delete_node(struct node *node);
