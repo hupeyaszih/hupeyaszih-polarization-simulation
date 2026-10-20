@@ -4,10 +4,15 @@
 
 > [!NOTE]
 > **Current Phase: Literature Review and Searching**
+> This project is under slow development, currently, because of my school and exams. I'll be working fast after the exams.
 
 ## What It Is 
 
 The simulation is written in C. As described above, HPS is graph based idea spreading simulation.
+
+## Details
+- Belief/idea is represented in 1D space.
+Basic variables every agent has: persuasiveness, stubbornness, openness, dynamic_reputation
 
 ## Background Reading
 The following literature includes research and foundaitonal studies reviewed to better understand how social dynamics work, which is necessary to create HPS's architecture.
