@@ -13,10 +13,10 @@ node_beliefs = [belief_dict.get(node, 0.5) for node in G.nodes()]
 fix, ax = plt.subplots(figsize=(8,8))
 pos = nx.spring_layout(G, seed=13)
 
-nx.draw(G, pos, ax=ax, with_labels=False, node_color=node_beliefs, cmap=plt.cm.coolwarm, vmin=0, vmax=1, node_size=50, edge_color="#434343", width=0.4, arrows=True, arrowsize=4)
+nx.draw(G, pos, ax=ax, with_labels=False, node_color=node_beliefs, cmap=plt.cm.coolwarm, vmin=-1, vmax=1, node_size=50, edge_color="#434343", width=0.4, arrows=True, arrowsize=4)
 
 
-sm = plt.cm.ScalarMappable(cmap=plt.cm.coolwarm, norm=plt.Normalize(vmin=0, vmax=1))
+sm = plt.cm.ScalarMappable(cmap=plt.cm.coolwarm, norm=plt.Normalize(vmin=-1, vmax=1))
 sm.set_array([])
 cbar = plt.colorbar(sm, ax=ax, shrink=0.65)
 cbar.set_label("Belief", fontsize=12, fontweight="bold")

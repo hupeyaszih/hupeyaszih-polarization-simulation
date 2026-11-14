@@ -45,7 +45,7 @@ void logger_save_nodes(const struct simulation *simulation) {
 
     for(uint32_t i = 0;i < simulation->config.N; ++i) {
         const struct node *node = simulation->nodes + i;
-        fprintf(file, "%u;%f;%u;%u;%u;%u;%u\n", node->id, globals_convert_uint32_to_float(node->belief), node->persuasiveness, node->stubbornness, node->openness, node->dynamic_reputation, node->edge_count);
+        fprintf(file, "%u;%f;%u;%u;%u;%u;%u\n", node->id, globals_convert_int32_to_float(node->belief), node->persuasiveness, node->stubbornness, node->openness, node->dynamic_reputation, node->edge_count);
     }
 
     fclose(file);

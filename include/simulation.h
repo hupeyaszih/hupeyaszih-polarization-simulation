@@ -12,7 +12,7 @@ struct edge {
 
 struct node {
     uint32_t id;
-    uint32_t belief;
+    int32_t belief;
 
     uint8_t persuasiveness;
     uint8_t stubbornness;
@@ -41,6 +41,10 @@ static inline uint32_t simulation_get_random_number(uint32_t min, uint32_t max) 
 
 static inline float simulation_get_random_float_between_0_1() {
     return (float) rand() / (float) RAND_MAX;
+}
+
+static inline float simulation_get_random_float_between_neg1_1() {
+    return (float) rand() / ((float) RAND_MAX / 2.0f) - 1.0f;
 }
 
 void simulation_node_add_edge(struct node *source_node, struct node *destination_node);
