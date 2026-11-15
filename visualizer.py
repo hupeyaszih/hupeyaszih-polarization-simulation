@@ -2,10 +2,14 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import pandas as pd
 
-nodes = pd.read_csv("./simulation_logs/nodes_0.csv", sep=";")
+step = input("step: ")
+nodes_path = "./simulation_logs/nodes_" + str(step) + ".csv"
+edges_path = "./simulation_logs/edges_" + str(step) + ".csv"
+
+nodes = pd.read_csv(nodes_path, sep=";")
 belief_dict = dict(zip(nodes["id"], nodes["belief"]))
 
-edges = pd.read_csv("./simulation_logs/edges_0.csv", sep=";")
+edges = pd.read_csv(edges_path, sep=";")
 G = nx.from_pandas_edgelist(edges, "src_id", "destination_id", create_using=nx.DiGraph())
 
 node_beliefs = [belief_dict.get(node, 0.5) for node in G.nodes()]
