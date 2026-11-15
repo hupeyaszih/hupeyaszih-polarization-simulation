@@ -1,5 +1,6 @@
 #include "simulation.h"
 #include "globals.h"
+#include "logger.h"
 #include <stdlib.h>
 
 void init_simulation(struct simulation *simulation, struct config *config) {
@@ -86,4 +87,18 @@ struct edge *simulation_node_find_edge(struct node *source_node, struct node *de
     }
 
     return NULL;
+}
+
+
+void simulation_next_step(struct simulation *simulation) {
+    if(NULL == simulation) return;
+    ++simulation->step;
+
+    /*
+    *
+    */
+
+    if(0 != simulation->step % simulation->config.save_interval) return;
+    logger_save_edges(simulation);
+    logger_save_nodes(simulation);
 }

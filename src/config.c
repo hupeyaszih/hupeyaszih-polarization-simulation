@@ -23,7 +23,8 @@ struct config config_init_default_config() {
         .threshold_remove_edge              = globals_convert_float_to_uint32(0.2f), //0 <= threshold_remove_edge <= 1
         .seed = 13,
 
-        .final_step = 1000,
+        .save_interval = 100,
+        .final_step    = 1000,
         .log_dir = "./"
     };
 }

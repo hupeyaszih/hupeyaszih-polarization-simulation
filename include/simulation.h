@@ -33,6 +33,8 @@ struct simulation {
 void delete_node(struct node *node);
 
 void init_simulation(struct simulation *simulation, struct config *config);
+void simulation_next_step(struct simulation *simulation);
+
 void delete_simulation(struct simulation *simulation);
 
 static inline uint32_t simulation_get_random_number(uint32_t min, uint32_t max) {

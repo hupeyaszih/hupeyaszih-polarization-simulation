@@ -2,6 +2,7 @@
 #include "config.h"
 #include "logger.h"
 #include "simulation.h"
+#include <stdint.h>
 #include <stdio.h>
 
 int main(int argc, char *argv[]) {
@@ -13,6 +14,9 @@ int main(int argc, char *argv[]) {
     printf("Hupeyaszih Polarization Simulation is starting...\n");
     struct simulation simulation;
     init_simulation(&simulation, &config);
+    for(uint64_t step = 0; step < simulation.config.final_step; ++step) {
+        simulation_next_step(&simulation);
+    }
 
     logger_save_edges(&simulation);
     logger_save_nodes(&simulation);
