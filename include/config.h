@@ -17,8 +17,13 @@ struct config {
     uint32_t initial_min_degree;
     uint32_t initial_max_degree;
 
-    uint32_t rewire_threshold;
     uint32_t seed;
+
+    uint32_t repulsion_constant;
+    uint32_t dynamic_reputation_changing_speed;
+    uint32_t perceptual_threshold;
+    uint32_t threshold_create_edge;
+    uint32_t threshold_remove_edge;
 
     uint64_t final_step;
 

@@ -16,7 +16,11 @@ struct config config_init_default_config() {
         .min_openness = 100,
         .max_openness = 140,
 
-        .rewire_threshold = globals_convert_float_to_uint32(0.2f),
+        .repulsion_constant                 = globals_convert_float_to_uint32(0.7f), //0 <= repulsion_constant    <= 1
+        .dynamic_reputation_changing_speed  = 20, //0 < dynamic_reputation_changing_speed
+        .perceptual_threshold               = globals_convert_float_to_uint32(0.05f),//0 <= perceptual_threshold  <= 1
+        .threshold_create_edge              = globals_convert_float_to_uint32(0.5f), //0 <= threshold_create_edge <= 1
+        .threshold_remove_edge              = globals_convert_float_to_uint32(0.2f), //0 <= threshold_remove_edge <= 1
         .seed = 13,
 
         .final_step = 1000,
