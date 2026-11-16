@@ -2,6 +2,7 @@
 #define SIMULATION_H
 
 #include "config.h"
+#include "pcg_basic.h"
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -40,15 +41,16 @@ void simulation_next_step(struct simulation *simulation);
 void delete_simulation(struct simulation *simulation);
 
 static inline uint32_t simulation_get_random_number(uint32_t min, uint32_t max) {
-    return rand() % (max - min) + min;
+    if(max <= min) return min;
+    return pcg32_random() % (max - min) + min;
 }
 
 static inline float simulation_get_random_float_between_0_1() {
-    return (float) rand() / (float) RAND_MAX;
+    return (float) pcg32_random() / (float) UINT32_MAX;
 }
 
 static inline float simulation_get_random_float_between_neg1_1() {
-    return (float) rand() / ((float) RAND_MAX / 2.0f) - 1.0f;
+    return (float) pcg32_random() / ((float) UINT32_MAX / 2.0f) - 1.0f;
 }
 
 void simulation_node_add_edge(struct node *source_node, struct node *destination_node);

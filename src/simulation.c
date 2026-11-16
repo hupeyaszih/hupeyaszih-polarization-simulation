@@ -5,11 +5,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "pcg_basic.h"
+
 void init_simulation(struct simulation *simulation, struct config *config) {
     simulation->config = *config;
     simulation->step = 0;
 
-    srand(config->seed);
+    pcg32_srandom(config->seed, 5);
+
 
     simulation->nodes = calloc(config->N, sizeof(struct node));
     simulation->belief_buffer = calloc(config->N, sizeof(int32_t));
@@ -134,6 +137,7 @@ void simulation_next_step(struct simulation *simulation) {
             int64_t delta_belief = (int64_t) (raw_delta_belief >> 32);
             total_delta += delta_belief;
         }
+        total_delta /= node->edge_count;
 
         int64_t new_belief = total_delta + (int64_t) node->belief;
         new_belief = hclamp_i64(new_belief, INT32_MIN, INT32_MAX);
