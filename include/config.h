@@ -26,6 +26,7 @@ struct config {
     uint32_t threshold_remove_edge;
 
     uint32_t save_interval;
+    uint32_t stats_save_interval;
     uint64_t final_step;
 
     char *log_dir;

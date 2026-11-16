@@ -152,11 +152,14 @@ void simulation_next_step(struct simulation *simulation) {
 
     // Calculate and Assign New Dynamic Reputations - 4
 
-    if(0 != simulation->step % simulation->config.save_interval) return;
-    const struct statistics stats = simulation_calculate_statistics(simulation);
-    logger_save_statistics(&stats);
-    logger_save_edges(simulation);
-    logger_save_nodes(simulation);
+    if(0 != simulation->config.save_interval && 0 == simulation->step % simulation->config.save_interval) {
+        logger_save_edges(simulation);
+        logger_save_nodes(simulation);
+    }
+    if(0 != simulation->config.stats_save_interval && 0 == simulation->step % simulation->config.stats_save_interval) {
+        const struct statistics stats = simulation_calculate_statistics(simulation);
+        logger_save_statistics(&stats);
+    }
 }
 
 
