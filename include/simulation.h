@@ -26,6 +26,8 @@ struct node {
 
 struct simulation {
     struct node *nodes;
+    int32_t *belief_buffer;
+    uint32_t *dynamic_reputation_buffer;
     struct config config;
     uint64_t step;
 };
