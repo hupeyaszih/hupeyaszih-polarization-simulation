@@ -50,3 +50,56 @@ void logger_save_nodes(const struct simulation *simulation) {
 
     fclose(file);
 }
+
+
+void logger_clear_old_statistics(const struct simulation *simulation) {
+    if(NULL == simulation) return;
+    char filename[64];
+    snprintf(filename, sizeof(filename), "%s/stats.csv", simulation->config.log_dir);
+
+    FILE *file = fopen(filename, "w");
+    if(!file) return;
+
+    fclose(file);
+}
+
+void logger_save_statistics(const struct statistics *stats) {
+    const struct simulation *simulation = stats->simulation;
+    if(NULL == simulation) return;
+    char filename[64];
+    snprintf(filename, sizeof(filename), "%s/stats.csv", simulation->config.log_dir);
+
+    FILE *check = fopen(filename, "r");
+    uint8_t file_exists = NULL != check;
+    size_t file_size = 0;
+    if(file_exists) {
+        fseek(check, 0, SEEK_END);
+        file_size = ftell(check);
+        fclose(check);
+    }
+    uint8_t create_new_file = (!file_exists || 0 == file_size);
+
+    FILE *file = NULL;
+    if(create_new_file) {
+        file = fopen(filename, "w");
+        if(!file) {
+            return;
+        }
+
+        fprintf(file, "step;belief_variance;average_belief;average_dynamic_reputation\n");
+    }
+
+    if(!file) {
+        file = fopen(filename, "a");
+    }
+    if(!file) {
+        return;
+    }
+
+    float f_v = (float)stats->belief_variance / ((double)INT32_MAX * INT32_MAX);
+    float f_b = (float)stats->average_belief / (float) (INT32_MAX);
+    float f_d = (float)stats->average_dynamic_reputation / (float) UINT32_MAX;
+
+    fprintf(file, "%lu;%f;%f;%f\n", stats->step, f_v, f_b, f_d);
+    fclose(file);
+}

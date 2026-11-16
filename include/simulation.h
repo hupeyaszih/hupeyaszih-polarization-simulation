@@ -56,4 +56,14 @@ void simulation_node_remove_edge(struct node *source_node, uint32_t edge_id);
 
 struct edge *simulation_node_find_edge(struct node *source_node, struct node *destination_node);
 
+struct statistics {
+    int32_t average_belief;
+
+    uint32_t average_dynamic_reputation;
+
+    const struct simulation *simulation;
+    uint64_t belief_variance;
+    uint64_t step;
+};
+struct statistics simulation_calculate_statistics(const struct simulation *simulation);
 #endif

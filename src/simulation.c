@@ -2,6 +2,7 @@
 #include "globals.h"
 #include "hmath.h"
 #include "logger.h"
+#include <stdio.h>
 #include <stdlib.h>
 
 void init_simulation(struct simulation *simulation, struct config *config) {
@@ -121,7 +122,7 @@ void simulation_next_step(struct simulation *simulation) {
             uint32_t repulsion_constant = simulation->config.repulsion_constant;
 
             int32_t dist = belief_j - belief_i;
-            int32_t abs_dist = abs(dist);
+            uint32_t abs_dist = abs(dist);
 
             int8_t repulsion = (repulsion_constant >= abs_dist / 2) * 2 - 1;
 
@@ -129,7 +130,8 @@ void simulation_next_step(struct simulation *simulation) {
             uint64_t stb = (uint64_t)(UINT32_MAX - stubbornness_i);
             uint32_t W = (uint32_t)((persuasion * stb) >> 32);
 
-            int64_t delta_belief = (int64_t)W * repulsion * (int64_t)dist;
+            __int128_t raw_delta_belief = (__int128_t)W * repulsion * (__int128_t)dist;
+            int64_t delta_belief = (int64_t) (raw_delta_belief >> 32);
             total_delta += delta_belief;
         }
 
@@ -147,6 +149,49 @@ void simulation_next_step(struct simulation *simulation) {
     // Calculate and Assign New Dynamic Reputations - 4
 
     if(0 != simulation->step % simulation->config.save_interval) return;
+    const struct statistics stats = simulation_calculate_statistics(simulation);
+    logger_save_statistics(&stats);
     logger_save_edges(simulation);
     logger_save_nodes(simulation);
+}
+
+
+
+
+
+
+
+struct statistics simulation_calculate_statistics(const struct simulation *simulation) {
+    struct statistics stats = {.average_belief = 0, .average_dynamic_reputation = 0, .belief_variance = 0};
+    if(NULL == simulation) return stats;
+    stats.simulation = simulation;
+    stats.step = simulation->step;
+
+    const struct node *nodes = simulation->nodes;
+    const uint32_t N = simulation->config.N;
+
+    int64_t total_belief = 0;
+    uint64_t total_dynamic_reputation = 0;
+    for(uint32_t i = 0; i < N; ++i) {
+        const struct node *node = nodes + i;
+
+        total_belief += node->belief;
+        total_dynamic_reputation += node->dynamic_reputation;
+    }
+    stats.average_belief = total_belief / (int64_t)N;
+    stats.average_dynamic_reputation = total_dynamic_reputation / N;
+
+
+    // Calculate Variance
+    __uint128_t belief_variance = 0;
+    for(uint32_t i = 0;i < N; ++i) {
+        const struct node *node = nodes + i;
+        int32_t belief = node->belief;
+
+        int32_t dist = belief - stats.average_belief;
+        belief_variance += (__uint128_t)((int64_t)dist * (int64_t)dist);
+    }
+    belief_variance /= N;
+    stats.belief_variance = (uint64_t)belief_variance;
+    return stats;
 }
