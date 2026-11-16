@@ -23,4 +23,15 @@ static inline float globals_convert_int32_to_float(int32_t x) {
     return (float)x / (float) INT32_MAX;
 }
 
+
+static inline uint8_t globals_convert_float_to_uint8(float x) {
+    if(x >= 1) return UINT8_MAX;
+    else if(x < 0) return 0;
+    return (uint8_t)(x * (float)UINT8_MAX);
+}
+
+static inline float globals_convert_uint8_to_float(uint8_t x) {
+    return (float)x / (float)UINT8_MAX;
+}
+
 #endif

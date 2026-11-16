@@ -70,28 +70,28 @@ void argument_parser_parse_config(struct config *const config, int argc, char *a
                 config->initial_max_degree = initial_max_degree;
                 break;
             }case 3: {
-                uint32_t min_stubbornness = hstring_str_to_uint32(value);
-                config->min_stubbornness = min_stubbornness;
+                float min_stubbornness = strtof(value, NULL);
+                config->min_stubbornness = globals_convert_float_to_uint8(min_stubbornness);
                 break;
             }case 4: {
-                uint32_t max_stubbornness = hstring_str_to_uint32(value);
-                config->max_stubbornness = max_stubbornness;
+                float max_stubbornness = strtof(value, NULL);
+                config->max_stubbornness = globals_convert_float_to_uint8(max_stubbornness);
                 break;
             }case 5: {
-                uint32_t min_persuasiveness = hstring_str_to_uint32(value);
-                config->min_persuasiveness = min_persuasiveness;
+                float min_persuasiveness = strtof(value, NULL);
+                config->min_persuasiveness = globals_convert_float_to_uint8(min_persuasiveness);
                 break;
             }case 6: {
-                uint32_t max_persuasiveness = hstring_str_to_uint32(value);
-                config->max_persuasiveness = max_persuasiveness;
+                float max_persuasiveness = strtof(value, NULL);
+                config->max_persuasiveness = globals_convert_float_to_uint8(max_persuasiveness);
                 break;
             }case 7: {
-                uint32_t min_openness = hstring_str_to_uint32(value);
-                config->min_openness = min_openness;
+                float min_openness = strtof(value, NULL);
+                config->min_openness = globals_convert_float_to_uint8(min_openness);
                 break;
             }case 8: {
-                uint32_t max_openness = hstring_str_to_uint32(value);
-                config->max_openness = max_openness;
+                float max_openness = strtof(value, NULL);
+                config->max_openness = globals_convert_float_to_uint8(max_openness);
                 break;
             }case 9: {
                 uint32_t seed = hstring_str_to_uint32(value);
