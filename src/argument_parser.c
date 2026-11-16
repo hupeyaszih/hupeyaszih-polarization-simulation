@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define TOTAL_SETTING_COUNT 19
+#define TOTAL_SETTING_COUNT 20
 #define SETTING_STR_LEN 48
 
 const char settings[TOTAL_SETTING_COUNT][SETTING_STR_LEN] = {
@@ -33,7 +33,9 @@ const char settings[TOTAL_SETTING_COUNT][SETTING_STR_LEN] = {
     "-dynamic_reputation_changing_speed",
     "-perceptual_threshold",
     "-threshold_create_edge",
-    "-threshold_remove_edge"
+    "-threshold_remove_edge",
+
+    "-belief_histogram_bucket_count"
 };
 
 uint32_t get_setting_id(char *str) {
@@ -132,6 +134,10 @@ void argument_parser_parse_config(struct config *const config, int argc, char *a
             }case 18: {
                 float threshold_remove_edge = strtof(value, NULL);
                 config->threshold_remove_edge = globals_convert_float_to_uint32(threshold_remove_edge);
+                break;
+            }case 19: {
+                uint32_t belief_histogram_bucket_count = hstring_str_to_uint32(value);
+                config->belief_histogram_bucket_count = belief_histogram_bucket_count;
                 break;
             }
         }

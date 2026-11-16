@@ -27,6 +27,7 @@ struct config {
 
     uint32_t save_interval;
     uint32_t stats_save_interval;
+    uint32_t belief_histogram_bucket_count;
     uint64_t final_step;
 
     char *log_dir;

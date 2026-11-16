@@ -12,4 +12,6 @@ void logger_save_statistics(const struct statistics *stats);
 void logger_save_edges(const struct simulation *simulation);
 void logger_save_nodes(const struct simulation *simulation);
 
+void logger_print_belief_histogram(const struct simulation *simulation);
+
 #endif

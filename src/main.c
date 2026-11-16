@@ -25,6 +25,9 @@ int main(int argc, char *argv[]) {
         simulation_next_step(&simulation);
     }
 
+
+    logger_print_belief_histogram(&simulation);
+
     delete_simulation(&simulation);
     return 0;
 }

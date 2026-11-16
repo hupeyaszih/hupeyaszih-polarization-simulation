@@ -24,7 +24,10 @@ struct config config_init_default_config() {
         .seed = 13,
 
         .save_interval = 100,
+        .stats_save_interval = 100,
         .final_step    = 1000,
-        .log_dir = "./"
+        .log_dir = "./",
+
+        .belief_histogram_bucket_count = 10
     };
 }
