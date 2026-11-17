@@ -113,11 +113,11 @@ void simulation_next_step(struct simulation *simulation) {
         int64_t total_delta = 0;
         for(uint32_t j = 0;j < node->edge_count; ++j) {
             uint32_t neighbor_id = node->edges[j].destination_id;
-            const struct node *neigbor = simulation->nodes + neighbor_id;
+            const struct node *neighbor = simulation->nodes + neighbor_id;
 
-            int32_t belief_j = neigbor->belief;
-            uint32_t persuasiveness_j = H_U8_TO_U32(neigbor->persuasiveness);
-            uint32_t dynamic_reputation_j = (neigbor->dynamic_reputation << 24);
+            int32_t belief_j = neighbor->belief;
+            uint32_t persuasiveness_j = H_U8_TO_U32(neighbor->persuasiveness);
+            uint32_t dynamic_reputation_j = (neighbor->dynamic_reputation << 24);
 
 
             uint32_t repulsion_constant = simulation->config.repulsion_constant;
@@ -152,9 +152,9 @@ void simulation_next_step(struct simulation *simulation) {
         int64_t total_delta = 0;
         for(uint32_t i = 0;i < node->edge_count; ++i) {
             uint32_t neighbor_id = node->edges[i].destination_id;
-            const struct node *neigbor = simulation->nodes + neighbor_id;
+            const struct node *neighbor = simulation->nodes + neighbor_id;
 
-            const int64_t belief_i_t = neigbor->belief;
+            const int64_t belief_i_t = neighbor->belief;
             const int64_t belief_i_t1 = simulation->belief_buffer[neighbor_id];
 
             int64_t dist_t = llabs(belief_j_t - belief_i_t);
