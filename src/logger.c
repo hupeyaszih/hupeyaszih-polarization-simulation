@@ -88,7 +88,7 @@ void logger_save_statistics(const struct statistics *stats) {
             return;
         }
 
-        fprintf(file, "step;belief_variance;average_belief;average_dynamic_reputation\n");
+        fprintf(file, "step;belief_variance;average_belief;average_dynamic_reputation;average_edge_count\n");
     }
 
     if(!file) {
@@ -101,8 +101,9 @@ void logger_save_statistics(const struct statistics *stats) {
     float f_v = (float)stats->belief_variance / ((double)INT32_MAX * INT32_MAX);
     float f_b = (float)stats->average_belief / (float) (INT32_MAX);
     float f_d = (float)stats->average_dynamic_reputation / (float) UINT8_MAX;
+    float f_e = (float)stats->average_edge_count;
 
-    fprintf(file, "%lu;%f;%f;%f\n", stats->step, f_v, f_b, f_d);
+    fprintf(file, "%lu;%f;%f;%f;%f\n", stats->step, f_v, f_b, f_d, f_e);
     fclose(file);
 }
 

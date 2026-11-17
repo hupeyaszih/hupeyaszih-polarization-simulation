@@ -4,6 +4,8 @@
 #include "logger.h"
 #include <stdlib.h>
 
+#include <stdbool.h>
+
 #include "pcg_basic.h"
 
 void init_simulation(struct simulation *simulation, struct config *config) {
@@ -95,6 +97,45 @@ struct edge *simulation_node_find_edge(struct node *source_node, struct node *de
     return NULL;
 }
 
+bool is_edge_possible_to_remove(const struct node *nodes, uint32_t source_id, uint32_t destination_id) {
+    const struct node *src  = nodes + source_id;
+    const struct node *dest = nodes + destination_id;
+
+    const int32_t belief_i = src->belief;
+    const int32_t belief_j = dest->belief;
+
+    const uint32_t openness_i = src->openness << 23;
+    const uint32_t openness_j = dest->openness << 23;
+
+    int64_t diff = (int64_t) belief_j - (int64_t) belief_i;
+    if(diff < 0) diff = -diff;
+    const uint32_t dist = (uint32_t) diff / 2;
+
+    bool able_i = openness_i <= dist;
+    bool able_j = openness_j <= dist;
+
+    return able_i || able_j;
+}
+
+bool is_edge_possible_to_create(const struct node *nodes, uint32_t source_id, uint32_t destination_id) {
+    const struct node *src  = nodes + source_id;
+    const struct node *dest = nodes + destination_id;
+
+    const int32_t belief_i = src->belief;
+    const int32_t belief_j = dest->belief;
+
+    const uint32_t openness_i = src->openness << 23;
+    const uint32_t openness_j = dest->openness << 23;
+
+    int64_t diff = (int64_t) belief_j - (int64_t) belief_i;
+    if(diff < 0) diff = -diff;
+    const uint32_t dist = (uint32_t) diff / 2;
+
+    bool able_i = openness_i >= dist;
+    bool able_j = openness_j >= dist;
+
+    return able_i && able_j;
+}
 
 void simulation_next_step(struct simulation *simulation) {
     if(NULL == simulation) return;
@@ -102,10 +143,37 @@ void simulation_next_step(struct simulation *simulation) {
     const uint32_t N = simulation->config.N;
 
     // Create/Remove Edges - 1
+    for(uint32_t i = 0; i < N; ++i) {
+        struct node *restrict node = simulation->nodes + i;
+
+        int32_t belief_i = node->belief;
+        uint32_t openness_i = H_U8_TO_U32(node->openness);
+
+        const uint32_t edge_count = node->edge_count;
+
+        // removing
+        if(simulation_get_random_number(0, UINT32_MAX) < simulation->config.threshold_remove_edge) {
+            uint32_t edge_id = simulation_get_random_number(0, edge_count);
+            struct edge *edge = node->edges + edge_id;
+            if(is_edge_possible_to_remove(simulation->nodes, edge->source_id, edge->destination_id)) {
+                simulation_node_remove_edge(node, edge_id);
+            }
+        }
+
+        // creating
+        if(simulation_get_random_number(0, UINT32_MAX) < simulation->config.threshold_create_edge / (edge_count + 1)) {
+            uint32_t target_node_id = simulation_get_random_number(0, N);
+            if(target_node_id == node->id) continue;
+            if(is_edge_possible_to_create(simulation->nodes, node->id, target_node_id)) {
+                simulation_node_add_edge(node, simulation->nodes + target_node_id);
+            }
+        }
+    }
     
     // Calculate New Beliefs - 2
     for(uint32_t i = 0;i < N; ++i) {
         const struct node *restrict node = simulation->nodes + i;
+        if(node->edge_count == 0) continue;
 
         int32_t belief_i = node->belief;
         uint32_t stubbornness_i = H_U8_TO_U32(node->stubbornness);
@@ -206,15 +274,17 @@ struct statistics simulation_calculate_statistics(const struct simulation *simul
 
     int64_t total_belief = 0;
     uint64_t total_dynamic_reputation = 0;
+    uint64_t total_edge_count = 0;
     for(uint32_t i = 0; i < N; ++i) {
         const struct node *node = nodes + i;
 
         total_belief += node->belief;
         total_dynamic_reputation += node->dynamic_reputation;
+        total_edge_count += node->edge_count;
     }
     stats.average_belief = total_belief / (int64_t)N;
     stats.average_dynamic_reputation = total_dynamic_reputation / N;
-
+    stats.average_edge_count = total_edge_count / N;
 
     // Calculate Variance
     __uint128_t belief_variance = 0;

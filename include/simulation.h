@@ -60,6 +60,7 @@ struct statistics {
     int32_t average_belief;
 
     uint32_t average_dynamic_reputation;
+    uint32_t average_edge_count;
 
     const struct simulation *simulation;
     uint64_t belief_variance;
