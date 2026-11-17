@@ -2,7 +2,6 @@
 #include "globals.h"
 #include "hmath.h"
 #include "logger.h"
-#include <stdio.h>
 #include <stdlib.h>
 
 #include "pcg_basic.h"
@@ -16,7 +15,6 @@ void init_simulation(struct simulation *simulation, struct config *config) {
 
     simulation->nodes = calloc(config->N, sizeof(struct node));
     simulation->belief_buffer = calloc(config->N, sizeof(int32_t));
-    simulation->dynamic_reputation_buffer = calloc(config->N, sizeof(uint32_t));
 
     for(uint32_t i = 0; i < config->N; ++i) {
         struct node *node = simulation->nodes + i;
@@ -60,7 +58,6 @@ void delete_simulation(struct simulation *simulation) {
     }
     free(simulation->nodes);
     free(simulation->belief_buffer);
-    free(simulation->dynamic_reputation_buffer);
 }
 
 void simulation_node_add_edge(struct node *source_node, struct node *destination_node) {
@@ -102,12 +99,13 @@ struct edge *simulation_node_find_edge(struct node *source_node, struct node *de
 void simulation_next_step(struct simulation *simulation) {
     if(NULL == simulation) return;
     ++simulation->step;
+    const uint32_t N = simulation->config.N;
 
     // Create/Remove Edges - 1
     
     // Calculate New Beliefs - 2
-    for(uint32_t i = 0;i < simulation->config.N; ++i) {
-        const struct node *node = simulation->nodes + i;
+    for(uint32_t i = 0;i < N; ++i) {
+        const struct node *restrict node = simulation->nodes + i;
 
         int32_t belief_i = node->belief;
         uint32_t stubbornness_i = H_U8_TO_U32(node->stubbornness);
@@ -119,7 +117,7 @@ void simulation_next_step(struct simulation *simulation) {
 
             int32_t belief_j = neigbor->belief;
             uint32_t persuasiveness_j = H_U8_TO_U32(neigbor->persuasiveness);
-            uint32_t dynamic_reputation_j = neigbor->dynamic_reputation;
+            uint32_t dynamic_reputation_j = (neigbor->dynamic_reputation << 24);
 
 
             uint32_t repulsion_constant = simulation->config.repulsion_constant;
@@ -143,14 +141,43 @@ void simulation_next_step(struct simulation *simulation) {
         new_belief = hclamp_i64(new_belief, INT32_MIN, INT32_MAX);
         simulation->belief_buffer[i] = new_belief;
     }
+
+    // Calculate and Assign New Dynamic Reputations - 3
+    for(uint32_t j = 0;j < N; ++j) {
+        struct node *restrict node = simulation->nodes + j;
+        if(node->edge_count == 0) continue;
+
+        const int64_t belief_j_t  = node->belief;
+
+        int64_t total_delta = 0;
+        for(uint32_t i = 0;i < node->edge_count; ++i) {
+            uint32_t neighbor_id = node->edges[i].destination_id;
+            const struct node *neigbor = simulation->nodes + neighbor_id;
+
+            const int64_t belief_i_t = neigbor->belief;
+            const int64_t belief_i_t1 = simulation->belief_buffer[neighbor_id];
+
+            int64_t dist_t = llabs(belief_j_t - belief_i_t);
+            int64_t dist_t1 = llabs(belief_j_t - belief_i_t1);
+
+            int64_t diff = dist_t - dist_t1;
+            total_delta += diff;
+        }
+        total_delta /= node->edge_count;
+        total_delta /= simulation->config.reputation_inertia;
+
+        int32_t scaled_delta = total_delta / (1 << 24);
+        if(abs(scaled_delta) < (simulation->config.perceptual_threshold >> 24)) scaled_delta = 0;
+
+        uint8_t new_dynamic_reputation =  hclamp_i32(node->dynamic_reputation + scaled_delta, 0, UINT8_MAX);
+        node->dynamic_reputation = new_dynamic_reputation;
+    }
     
-    // Assign New Beliefs - 3
-    for(uint32_t i = 0;i < simulation->config.N; ++i) {
+    // Assign New Beliefs - 4
+    for(uint32_t i = 0;i < N; ++i) {
         struct node *node = simulation->nodes + i;
         node->belief = simulation->belief_buffer[i];
     }
-
-    // Calculate and Assign New Dynamic Reputations - 4
 
     if(0 != simulation->config.save_interval && 0 == simulation->step % simulation->config.save_interval) {
         logger_save_edges(simulation);

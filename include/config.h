@@ -20,7 +20,7 @@ struct config {
     uint32_t seed;
 
     uint32_t repulsion_constant;
-    uint32_t dynamic_reputation_changing_speed;
+    uint32_t reputation_inertia;
     uint32_t perceptual_threshold;
     uint32_t threshold_create_edge;
     uint32_t threshold_remove_edge;

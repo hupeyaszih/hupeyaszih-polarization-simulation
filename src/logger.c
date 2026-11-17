@@ -9,7 +9,7 @@
 void logger_print_config(struct config *config) {
     if(NULL == config) return;
 
-    printf("config = {\n    N: %u,\n    min_stubbornness: %f,\n    max_stubbornness: %f,\n    min_persuasiveness: %f,\n    max_persuasiveness: %f,\n    min_openness: %f,\n    max_openness: %f,\n    initial_min_degree: %u,\n    initial_max_degree: %u,\n    seed: %u,\n    repulsion_constant: %f,\n    dynamic_reputation_changing_speed: %d,\n    perceptual_threshold: %f,\n    threshold_create_edge: %f,\n    threshold_remove_edge: %f,\n    save_interval: %d,\n    stats_save_interval: %d,\n    final_step: %lu,\n    log_dir: %s,\n    belief_histogram_bucket_count: %u\n}\n", config->N, globals_convert_uint8_to_float(config->min_stubbornness), globals_convert_uint8_to_float(config->max_stubbornness), globals_convert_uint8_to_float(config->min_persuasiveness), globals_convert_uint8_to_float(config->max_persuasiveness), globals_convert_uint8_to_float(config->min_openness), globals_convert_uint8_to_float(config->max_openness), config->initial_min_degree, config->initial_max_degree, config->seed, globals_convert_uint32_to_float(config->repulsion_constant), config->dynamic_reputation_changing_speed, globals_convert_uint32_to_float(config->perceptual_threshold), globals_convert_uint32_to_float(config->threshold_create_edge), globals_convert_uint32_to_float(config->threshold_remove_edge), config->save_interval, config->stats_save_interval, config->final_step, config->log_dir, config->belief_histogram_bucket_count);
+    printf("config = {\n    N: %u,\n    min_stubbornness: %f,\n    max_stubbornness: %f,\n    min_persuasiveness: %f,\n    max_persuasiveness: %f,\n    min_openness: %f,\n    max_openness: %f,\n    initial_min_degree: %u,\n    initial_max_degree: %u,\n    seed: %u,\n    repulsion_constant: %f,\n    reputation_inertia: %d,\n    perceptual_threshold: %f,\n    threshold_create_edge: %f,\n    threshold_remove_edge: %f,\n    save_interval: %d,\n    stats_save_interval: %d,\n    final_step: %lu,\n    log_dir: %s,\n    belief_histogram_bucket_count: %u\n}\n", config->N, globals_convert_uint8_to_float(config->min_stubbornness), globals_convert_uint8_to_float(config->max_stubbornness), globals_convert_uint8_to_float(config->min_persuasiveness), globals_convert_uint8_to_float(config->max_persuasiveness), globals_convert_uint8_to_float(config->min_openness), globals_convert_uint8_to_float(config->max_openness), config->initial_min_degree, config->initial_max_degree, config->seed, globals_convert_uint32_to_float(config->repulsion_constant), config->reputation_inertia, globals_convert_uint32_to_float(config->perceptual_threshold), globals_convert_uint32_to_float(config->threshold_create_edge), globals_convert_uint32_to_float(config->threshold_remove_edge), config->save_interval, config->stats_save_interval, config->final_step, config->log_dir, config->belief_histogram_bucket_count);
 }
 
 void logger_save_edges(const struct simulation *simulation) {
@@ -100,7 +100,7 @@ void logger_save_statistics(const struct statistics *stats) {
 
     float f_v = (float)stats->belief_variance / ((double)INT32_MAX * INT32_MAX);
     float f_b = (float)stats->average_belief / (float) (INT32_MAX);
-    float f_d = (float)stats->average_dynamic_reputation / (float) UINT32_MAX;
+    float f_d = (float)stats->average_dynamic_reputation / (float) UINT8_MAX;
 
     fprintf(file, "%lu;%f;%f;%f\n", stats->step, f_v, f_b, f_d);
     fclose(file);

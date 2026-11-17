@@ -30,7 +30,7 @@ const char settings[TOTAL_SETTING_COUNT][SETTING_STR_LEN] = {
     "-log_dir",
 
     "-repulsion_constant",
-    "-dynamic_reputation_changing_speed",
+    "-reputation_inertia",
     "-perceptual_threshold",
     "-threshold_create_edge",
     "-threshold_remove_edge",
@@ -120,8 +120,8 @@ void argument_parser_parse_config(struct config *const config, int argc, char *a
                 config->repulsion_constant = globals_convert_float_to_uint32(repulsion_constant);
                 break;
             }case 15: {
-                uint32_t dynamic_reputation_changing_speed = hstring_str_to_uint32(value);
-                config->dynamic_reputation_changing_speed = dynamic_reputation_changing_speed;
+                uint32_t reputation_inertia = hstring_str_to_uint32(value);
+                config->reputation_inertia = reputation_inertia;
                 break;
             }case 16: {
                 float perceptual_threshold = strtof(value, NULL);
