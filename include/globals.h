@@ -34,4 +34,8 @@ static inline float globals_convert_uint8_to_float(uint8_t x) {
     return (float)x / (float)UINT8_MAX;
 }
 
+static inline int32_t globals_convert_uint8_to_int32(uint8_t x) {
+    return (int32_t) (((int64_t)x * INT32_MAX) / 255);
+}
+
 #endif

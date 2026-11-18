@@ -101,13 +101,13 @@ bool is_edge_possible_to_remove(const struct node *nodes, uint32_t source_id, ui
     const struct node *src  = nodes + source_id;
     const struct node *dest = nodes + destination_id;
 
-    const int32_t belief_i = src->belief;
-    const int32_t belief_j = dest->belief;
+    const int64_t belief_i = src->belief;
+    const int64_t belief_j = dest->belief;
 
-    const uint32_t openness_i = src->openness << 23;
-    const uint32_t openness_j = dest->openness << 23;
+    const int32_t openness_i = (uint32_t) globals_convert_uint8_to_int32(src->openness);
+    const int32_t openness_j = (uint32_t) globals_convert_uint8_to_int32(dest->openness);
 
-    int64_t diff = (int64_t) belief_j - (int64_t) belief_i;
+    int64_t diff = belief_j - belief_i;
     if(diff < 0) diff = -diff;
     const uint32_t dist = (uint32_t) diff / 2;
 
@@ -121,13 +121,13 @@ bool is_edge_possible_to_create(const struct node *nodes, uint32_t source_id, ui
     const struct node *src  = nodes + source_id;
     const struct node *dest = nodes + destination_id;
 
-    const int32_t belief_i = src->belief;
-    const int32_t belief_j = dest->belief;
+    const int64_t belief_i = src->belief;
+    const int64_t belief_j = dest->belief;
 
-    const uint32_t openness_i = src->openness << 23;
-    const uint32_t openness_j = dest->openness << 23;
+    const int32_t openness_i = (uint32_t) globals_convert_uint8_to_int32(src->openness);
+    const int32_t openness_j = (uint32_t) globals_convert_uint8_to_int32(dest->openness);
 
-    int64_t diff = (int64_t) belief_j - (int64_t) belief_i;
+    int64_t diff = belief_j - belief_i;
     if(diff < 0) diff = -diff;
     const uint32_t dist = (uint32_t) diff / 2;
 
@@ -145,10 +145,6 @@ void simulation_next_step(struct simulation *simulation) {
     // Create/Remove Edges - 1
     for(uint32_t i = 0; i < N; ++i) {
         struct node *restrict node = simulation->nodes + i;
-
-        int32_t belief_i = node->belief;
-        uint32_t openness_i = H_U8_TO_U32(node->openness);
-
         const uint32_t edge_count = node->edge_count;
 
         // removing
@@ -175,7 +171,7 @@ void simulation_next_step(struct simulation *simulation) {
         const struct node *restrict node = simulation->nodes + i;
         if(node->edge_count == 0) continue;
 
-        int32_t belief_i = node->belief;
+        int64_t belief_i = node->belief;
         uint32_t stubbornness_i = H_U8_TO_U32(node->stubbornness);
 
         int64_t total_delta = 0;
@@ -183,15 +179,15 @@ void simulation_next_step(struct simulation *simulation) {
             uint32_t neighbor_id = node->edges[j].destination_id;
             const struct node *neighbor = simulation->nodes + neighbor_id;
 
-            int32_t belief_j = neighbor->belief;
+            int64_t belief_j = neighbor->belief;
             uint32_t persuasiveness_j = H_U8_TO_U32(neighbor->persuasiveness);
-            uint32_t dynamic_reputation_j = (neighbor->dynamic_reputation << 24);
+            uint32_t dynamic_reputation_j = H_U8_TO_U32(neighbor->dynamic_reputation);
 
 
             uint32_t repulsion_constant = simulation->config.repulsion_constant;
 
-            int32_t dist = belief_j - belief_i;
-            uint32_t abs_dist = abs(dist);
+            int64_t dist = belief_j - belief_i;
+            uint64_t abs_dist = llabs(dist);
 
             int8_t repulsion = (repulsion_constant >= abs_dist / 2) * 2 - 1;
 
